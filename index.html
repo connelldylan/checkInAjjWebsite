@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Entry Form</title>
+    <title>Check-In</title>
     <link rel="stylesheet" href="style.css">
     <script type="module" src="app.js"></script>
+    <style>
+        input[readonly] {
+            background-color: #e9ecef;
+            color: #495057;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
-    <h1>Text Entry Form</h1>
+    <h1>Check-In</h1>
     <form id="entryForm">
         <div class="form-group">
             <label for="name">Name:</label>
@@ -16,7 +23,7 @@
         </div>
         <div class="form-group">
             <label for="date">Today's Date:</label>
-            <input type="text" id="date" name="date" required>
+            <input type="date" id="date" name="date" required readonly>
         </div>
         <button type="submit">Submit</button>
     </form>

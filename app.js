@@ -17,6 +17,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Autofill date input with today's date
+window.addEventListener('DOMContentLoaded', () => {
+    const dateInput = document.getElementById("date");
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    dateInput.value = `${yyyy}-${mm}-${dd}`;
+});
+
 // Form submission handler
 document.getElementById('entryForm').addEventListener('submit', async (e) => {
     e.preventDefault();
