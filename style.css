@@ -62,7 +62,23 @@ button[type="submit"]:hover {
 }
 
 input[readonly] {
-    background-color: #e9ecef;
-    color: #495057;
-    cursor: not-allowed;
+    background-color: transparent; /* Removes gray box */
+    color: #000080; /* Match your main text color */
+    cursor: default; /* Optional: feel less 'disabled' */
+    border: none; /* Optional: remove border if you want a cleaner look */
+    outline: none;
 }
+
+
+input[type="date"][readonly] {
+    background-color: transparent;
+    border: none;
+    color: #000080;
+    font-size: 16px;
+    cursor: default;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+
