@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getFirestore, collection, query, where, getDocs, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -31,22 +31,35 @@ window.addEventListener('DOMContentLoaded', () => {
 document.getElementById('entryForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const name = document.getElementById('name').value;
-    const date = document.getElementById('date').value;
+    const email = document.getElementById('email').value;
+const date = document.getElementById('date').value;
 
-    try {
-        const docRef = await addDoc(collection(db, "entries"), {
-            name: name,
-            date: date,
-            timestamp: new Date()
+try {
+    // Search the Members collection for the given email
+    const membersRef = collection(db, "Members");
+    const q = query(membersRef, where("Email", "==", email));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+        querySnapshot.forEach(async (doc) => {
+            const memberRef = doc.ref;
+
+            // Update the CheckIns array with the new check-in
+            await updateDoc(memberRef, {
+                CheckIns: arrayUnion({ date: new Date() })
+            });
+
+            alert("Check-in successful!");
         });
-        console.log("Document written with ID: ", docRef.id);
-        alert("Data submitted successfully!");
-    } catch (e) {
-        console.error("Error adding document: ", e);
-        alert("Error submitting data.");
+    } else {
+        alert("No member found with that email.");
     }
+} catch (e) {
+    console.error("Error during check-in: ", e);
+    alert("Error submitting check-in.");
+}
 
-    // Clear the form
-    document.getElementById('entryForm').reset();
+// Clear the form
+document.getElementById('entryForm').reset();
+
 });
