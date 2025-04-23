@@ -81,4 +81,48 @@ input[type="date"][readonly] {
     -webkit-appearance: none;
 }
 
+/* Error Message Box */
+#error-message {
+    background-color: #f8faff;  /* Soft blue background (matches your general theme) */
+    color: #d8000c;  /* Red text for visibility */
+    padding: 20px;
+    margin: 20px 0;
+    border: 2px solid #d8000c;  /* Red border for contrast */
+    border-radius: 12px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 128, 0.1);  /* Light shadow for prominence */
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 16px;
+}
+
+#error-message:hover {
+    background-color: #f1f1f1;  /* Lighter background on hover */
+    cursor: pointer;
+}
+
+/* Success Message Box */
+#success-message {
+    background-color: #e6fffa;  /* Light teal background */
+    color: #28a745;  /* Green text for success */
+    padding: 20px;
+    margin: 20px 0;
+    border: 2px solid #28a745;  /* Green border for contrast */
+    border-radius: 12px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 128, 0, 0.1);  /* Light green shadow */
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 16px;
+}
+
+#success-message:hover {
+    background-color: #d1f7e7;  /* Lighter green on hover */
+    cursor: pointer;
+}
+
 

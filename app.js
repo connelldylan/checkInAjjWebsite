@@ -32,34 +32,78 @@ document.getElementById('entryForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const email = document.getElementById('email').value;
-const date = document.getElementById('date').value;
+    const date = document.getElementById('date').value;
 
-try {
-    // Search the Members collection for the given email
-    const membersRef = collection(db, "Members");
-    const q = query(membersRef, where("Email", "==", email));
-    const querySnapshot = await getDocs(q);
+    // Clear previous messages (if any)
+    clearMessages();
 
-    if (!querySnapshot.empty) {
-        querySnapshot.forEach(async (doc) => {
-            const memberRef = doc.ref;
+    try {
+        // Search the Members collection for the given email
+        const membersRef = collection(db, "Members");
+        const q = query(membersRef, where("Email", "==", email));
+        const querySnapshot = await getDocs(q);
 
-            // Update the CheckIns array with the new check-in
-            await updateDoc(memberRef, {
-                CheckIns: arrayUnion({ date: new Date() })
+        if (!querySnapshot.empty) {
+            querySnapshot.forEach(async (doc) => {
+                const memberRef = doc.ref;
+                const memberData = doc.data();
+
+                // Get the last check-in time from the CheckIns array
+                const lastCheckIn = memberData.CheckIns?.length > 0 ? memberData.CheckIns[memberData.CheckIns.length - 1].date.toDate() : null;
+
+                const now = new Date();
+                const twoHoursAgo = new Date(now - 2 * 60 * 60 * 1000); // 2 hours ago
+
+                if (lastCheckIn && lastCheckIn > twoHoursAgo) {
+                    // If the last check-in was within the last 2 hours
+                    showErrorMessage("You can only check in once every 2 hours. Please wait before checking in again.");
+                } else {
+                    // Update the CheckIns array with the new check-in
+                    await updateDoc(memberRef, {
+                        CheckIns: arrayUnion({ date: now })
+                    });
+
+                    showSuccessMessage("Check-in successful!");
+                }
             });
-
-            alert("Check-in successful!");
-        });
-    } else {
-        alert("No member found with that email.");
+        } else {
+            showErrorMessage("No member found with that email.");
+        }
+    } catch (e) {
+        console.error("Error during check-in: ", e);
+        showErrorMessage("Error submitting check-in.");
     }
-} catch (e) {
-    console.error("Error during check-in: ", e);
-    alert("Error submitting check-in.");
+
+    // Clear the form
+    document.getElementById('entryForm').reset();
+});
+
+// Function to display error messages
+function showErrorMessage(message) {
+    const errorContainer = document.createElement('div');
+    errorContainer.id = 'error-message';
+    errorContainer.textContent = message;
+    document.body.appendChild(errorContainer);
 }
 
-// Clear the form
-document.getElementById('entryForm').reset();
+// Function to display success messages
+function showSuccessMessage(message) {
+    const successContainer = document.createElement('div');
+    successContainer.id = 'success-message';
+    successContainer.textContent = message;
+    document.body.appendChild(successContainer);
+}
 
-});
+// Function to clear previous messages
+function clearMessages() {
+    const existingErrorMessage = document.getElementById('error-message');
+    const existingSuccessMessage = document.getElementById('success-message');
+    
+    if (existingErrorMessage) {
+        existingErrorMessage.remove();
+    }
+    
+    if (existingSuccessMessage) {
+        existingSuccessMessage.remove();
+    }
+}
